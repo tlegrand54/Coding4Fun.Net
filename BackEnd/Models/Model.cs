@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace BackEnd.Models
 {
-	public class BloggingContext : DbContext
+	public class BlogContext : DbContext
         {
-		public BloggingContext(DbContextOptions<BloggingContext> options): base(options) { }
+		public BlogContext(DbContextOptions<BlogContext> options): base(options) { }
 
 		public DbSet<Blog> Blogs { get; set; }
 		
