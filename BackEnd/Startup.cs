@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using BackEnd.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace BackEnd
 {
@@ -32,6 +33,17 @@ namespace BackEnd
 	    	var connection = "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=mysecretpassword;";
 	    
 	    	services.AddEntityFrameworkNpgsql().AddDbContext<BlogContext>(options => options.UseNpgsql(connection)).BuildServiceProvider();
+			
+			 services.AddDbContext<BlogContext>(opt =>
+				opt.UseInMemoryDatabase("TodoList"));
+			services.AddMvc()
+				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+			// Register the Swagger generator, defining 1 or more Swagger documents
+			services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+			});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +57,16 @@ namespace BackEnd
             {
                 app.UseHsts();
             }
+			
+			// Enable middleware to serve generated Swagger as a JSON endpoint.
+			app.UseSwagger();
+
+			// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+			// specifying the Swagger JSON endpoint.
+			app.UseSwaggerUI(c =>
+			{
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+			});
 
             app.UseHttpsRedirection();
             app.UseMvc();
